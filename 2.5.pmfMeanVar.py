@@ -1,23 +1,31 @@
 import Pmf
-
-hours_invested = [2, 8, 10, 6, 6, 5, 7, 8, 9, 10, 4, 6, 8, 9, 10, 6, 8, 9, 10]
+import Birth_Order
 
 def pmf_mean(pmf):
     mean = 0
-    for hour, probability in pmf.Items():
-       mean += hour * probability
+    for val, probability in pmf.Items():
+       mean += val * probability
     return mean
 
 def pmf_var(pmf):
     var = 0
     mean = pmf_mean(pmf)
-    for hour, probability in pmf.Items():
-       var += probability * ((hour - mean) ** 2)
+    for val, probability in pmf.Items():
+       var += probability * ((val - mean) ** 2)
     return var
 
-hours_pmf = Pmf.MakePmfFromList(hours_invested)
-if __debug__:
-    assert pmf_mean(hours_pmf) == hours_pmf.Mean()
-    assert pmf_var(hours_pmf) == hours_pmf.Var()
-print "Pmf mean ", pmf_mean(hours_pmf), hours_pmf.Mean()
-print "Pmf Variance ", pmf_var(hours_pmf), hours_pmf.Var()
+def pmf_mode(pmf):
+    sorted_list = sorted(pmf.Items(), key=lambda x: x[1])
+    max_item = sorted_list[-1]
+    return max_item
+
+
+first_born_pmf = Pmf.MakePmfFromList(Birth_Order.birth_ord_list[0].prgweeks)
+
+assert pmf_mean(first_born_pmf) == first_born_pmf.Mean()
+assert pmf_var(first_born_pmf) == first_born_pmf.Var()
+
+print "Pmf mean ", pmf_mean(first_born_pmf)
+print "Pmf Variance ", pmf_var(first_born_pmf)
+
+print "Week in which first borns arrive with max probability: ", pmf_mode(first_born_pmf)
